@@ -18,12 +18,15 @@ class SignallingService {
     // listen onConnect event
     socket!.onConnect((data) {
       log("Socket connected !!");
+       socket!.emit("joinGroup", {"userId":selfCallerID});
     });
 
     // listen onConnectError event
     socket!.onConnectError((data) {
       log("Connect Error $data");
     });
+
+   
 
     // connect socket
     socket!.connect();

@@ -56,17 +56,30 @@ class _CallScreenState extends State<CallScreen> {
     }
   }
 
+  Map<String, dynamic> _voiceConstraints = {
+    "mandatory": {
+      "OfferToReceiveAudio": true,
+      "OfferToReceiveVideo": false,
+    },
+    "optional": [],
+  };
   _setupPeerConnection() async {
     // create peer connection
     _rtcPeerConnection = await createPeerConnection({
       'iceServers': [
         {
-          'urls': [
-            'stun:stun1.l.google.com:19302',
-            'stun:stun2.l.google.com:19302'
-          ]
+          "urls": "stun:171.244.64.245:3478",
+          "username": "turnintes",
+          "credential": "turnintes"
+        },
+        {
+          "urls": "turn:171.244.64.245:3478",
+          "username": "turnintes",
+          "credential": "turnintes"
         }
-      ]
+      ],
+      'sdpSemantics': 'unified-plan',
+      'iceTransportPolicy': 'relay'
     });
 
     // listen for remotePeer mediaTrack event
@@ -155,7 +168,8 @@ class _CallScreenState extends State<CallScreen> {
       });
 
       // create SDP Offer
-      RTCSessionDescription offer = await _rtcPeerConnection!.createOffer();
+      RTCSessionDescription offer =
+          await _rtcPeerConnection!.createOffer(_voiceConstraints);
 
       // set SDP offer as localDescription for peerConnection
       await _rtcPeerConnection!.setLocalDescription(offer);
